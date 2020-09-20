@@ -2,7 +2,6 @@ package jonarizzz.currency.service;
 
 import jonarizzz.currency.entities.Bank;
 import jonarizzz.currency.entities.CurrencyRate;
-import jonarizzz.currency.entities.MtbCurrencyRate;
 import jonarizzz.currency.repository.CurrencyRateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +17,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @Service
 public class CurrencyService {
@@ -29,6 +30,12 @@ public class CurrencyService {
     private final static String RUB_CODE = "298";
     private final static String[] CURRENCY_CODES = {USD_CODE, EUR_CODE, RUB_CODE};
     private final static String MTB_BANK_RATES_URL = "https://www.mtbank.by/currxml.php";
+    private final static String USD_NAME = "USD";
+    private final static String EUR_NAME = "EUR";
+    private final static String RUB_NAME = "RUB";
+    private final static String BYN_NAME = "BYN";
+
+
 
     @Autowired
     private CurrencyRateRepository currencyRateRepository;
@@ -52,6 +59,7 @@ public class CurrencyService {
                 currencyRateRepository.findByDay(LocalDate.now())
                         .stream()
                         .anyMatch(currencyRate -> currencyRate.getBank().equals(Bank.MTB))) {
+            List<CurrencyRate> currencyRateList = new ArrayList<>();
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document document = builder.parse(MTB_BANK_RATES_URL);
@@ -64,10 +72,32 @@ public class CurrencyService {
                             .item(0).getChildNodes().item(0).getNodeValue();
                     String codeTo = elem.getElementsByTagName("codeTo")
                             .item(0).getChildNodes().item(0).getNodeValue();
-                    double currencyRate = Double.parseDouble(elem.getElementsByTagName("purchase")
+                    double rate = Double.parseDouble(elem.getElementsByTagName("purchase")
                             .item(0).getChildNodes().item(0).getNodeValue());
-                    System.out.println(code + " " + codeTo + " " + currencyRate);
+                    if (code.equals(BYN_NAME)){
+                        CurrencyRate currencyRate = new CurrencyRate();
+                        currencyRate.setDay(LocalDate.now());
+                        currencyRate.setBank(Bank.MTB);
+                        if (codeTo.equals(USD_NAME)){
+                            currencyRate.setCurrencyName(USD_NAME);
+                            currencyRate.setCurrencyRate(rate);
+                            currencyRateList.add(currencyRate);
+                        }
+                        if (codeTo.equals(EUR_NAME)){
+                            currencyRate.setCurrencyName(EUR_NAME);
+                            currencyRate.setCurrencyRate(rate);
+                            currencyRateList.add(currencyRate);
+                        }
+                        if (codeTo.equals(RUB_NAME)){
+                            currencyRate.setCurrencyName(RUB_NAME);
+                            currencyRate.setCurrencyRate(rate);
+                            currencyRateList.add(currencyRate);
+                        }
+                    }
                 }
+            }
+            if (!currencyRateList.isEmpty()){
+                currencyRateRepository.saveAll(currencyRateList);
             }
         }
     }

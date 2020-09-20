@@ -22,7 +22,7 @@ public class Controller {
     }
 
     @GetMapping("/test")
-    public void hui () throws IOException, SAXException, ParserConfigurationException {
+    public void test () throws IOException, SAXException, ParserConfigurationException {
         currencyService.updateCurrentMtbRates();
     }
 
