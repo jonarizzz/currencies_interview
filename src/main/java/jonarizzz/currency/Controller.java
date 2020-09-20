@@ -5,6 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 
 @RestController
 public class Controller {
@@ -18,8 +22,8 @@ public class Controller {
     }
 
     @GetMapping("/test")
-    public void hui (){
-        currencyService.updateCurrentNationalRates();
+    public void hui () throws IOException, SAXException, ParserConfigurationException {
+        currencyService.updateCurrentMtbRates();
     }
 
 

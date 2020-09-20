@@ -15,13 +15,13 @@ import java.time.LocalDate;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CurrencyRate {
     @Id
-    String id;
-    Bank bank;
-    LocalDate day;
+    private String id;
+    private Bank bank;
+    private LocalDate day;
     @JsonProperty("Cur_Abbreviation")
-    String currencyName;
+    private String currencyName;
     @JsonProperty("Cur_OfficialRate")
-    double currencyRate;
+    private double currencyRate;
     @JsonProperty("Cur_Scale")
-    int scale;
+    private int scale;
 }
