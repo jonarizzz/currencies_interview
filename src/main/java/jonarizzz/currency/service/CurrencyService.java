@@ -1,7 +1,9 @@
 package jonarizzz.currency.service;
 
 import jonarizzz.currency.entities.Bank;
+import jonarizzz.currency.entities.CurrencyData;
 import jonarizzz.currency.entities.CurrencyRate;
+import jonarizzz.currency.entities.Format;
 import jonarizzz.currency.repository.CurrencyRateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import javax.swing.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -97,6 +100,12 @@ public class CurrencyService {
                 currencyRateRepository.saveAll(currencyRateList);
             }
         }
+    }
+
+    public CurrencyData getRate(LocalDate date, Format format, List<String> currencies, List<String> exchanges) throws IOException, SAXException, ParserConfigurationException {
+        updateCurrentMtbRates();
+        updateCurrentNationalRates();
+        return new CurrencyData();
     }
 
 }
