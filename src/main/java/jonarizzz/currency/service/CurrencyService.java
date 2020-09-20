@@ -42,8 +42,7 @@ public class CurrencyService {
 
     public void updateCurrentNationalRates() {
         if (currencyRateRepository.findByDay(LocalDate.now()).isEmpty() ||
-                currencyRateRepository.findByDay(LocalDate.now()).stream()
-                .anyMatch(currencyRate -> currencyRate.getBank().equals(Bank.NATIONAL))){
+                currencyRateRepository.findByDayAndBank(LocalDate.now(), Bank.NATIONAL).isEmpty()){
             RestTemplate template = new RestTemplate();
             Arrays.stream(CURRENCY_CODES).forEach(currencyCode -> {
                 CurrencyRate rate = template.getForObject(NATIONAL_BANK_RATES_URL + currencyCode, CurrencyRate.class);
@@ -56,9 +55,7 @@ public class CurrencyService {
 
     public void updateCurrentMtbRates() throws ParserConfigurationException, IOException, SAXException {
         if (currencyRateRepository.findByDay(LocalDate.now()).isEmpty() ||
-                currencyRateRepository.findByDay(LocalDate.now())
-                        .stream()
-                        .anyMatch(currencyRate -> currencyRate.getBank().equals(Bank.MTB))) {
+                currencyRateRepository.findByDayAndBank(LocalDate.now(), Bank.MTB).isEmpty()) {
             List<CurrencyRate> currencyRateList = new ArrayList<>();
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();

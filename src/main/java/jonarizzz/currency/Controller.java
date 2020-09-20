@@ -23,6 +23,7 @@ public class Controller {
 
     @GetMapping("/test")
     public void test () throws IOException, SAXException, ParserConfigurationException {
+        currencyService.updateCurrentNationalRates();
         currencyService.updateCurrentMtbRates();
     }
 

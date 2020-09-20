@@ -1,5 +1,6 @@
 package jonarizzz.currency.repository;
 
+import jonarizzz.currency.entities.Bank;
 import jonarizzz.currency.entities.CurrencyRate;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
@@ -9,5 +10,6 @@ import java.util.List;
 
 @Repository
 public interface CurrencyRateRepository extends MongoRepository<CurrencyRate, String> {
-    public List<CurrencyRate> findByDay(LocalDate day);
+    List<CurrencyRate> findByDay(LocalDate day);
+    List<CurrencyRate> findByDayAndBank(LocalDate day, Bank bank);
 }
