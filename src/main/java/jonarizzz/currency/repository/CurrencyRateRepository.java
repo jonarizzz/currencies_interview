@@ -12,4 +12,5 @@ import java.util.List;
 public interface CurrencyRateRepository extends MongoRepository<CurrencyRate, String> {
     List<CurrencyRate> findByDay(LocalDate day);
     List<CurrencyRate> findByDayAndBank(LocalDate day, Bank bank);
+    List<CurrencyRate> findByDayAndBankAndCurrencyName (Bank bank, String currencyName, LocalDate day);
 }

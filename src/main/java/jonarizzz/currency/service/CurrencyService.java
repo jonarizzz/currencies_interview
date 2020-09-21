@@ -6,6 +6,7 @@ import jonarizzz.currency.entities.CurrencyRate;
 import jonarizzz.currency.entities.Format;
 import jonarizzz.currency.repository.CurrencyRateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.w3c.dom.Document;
@@ -23,6 +24,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CurrencyService {
@@ -105,7 +107,21 @@ public class CurrencyService {
     public CurrencyData getRate(LocalDate date, Format format, List<String> currencies, List<String> exchanges) throws IOException, SAXException, ParserConfigurationException {
         updateCurrentMtbRates();
         updateCurrentNationalRates();
+
+        CurrencyData currencyData = new CurrencyData();
+        currencies.stream().map(currencyName -> getBestRate(date, currencyName)).collect(Collectors.toList());
+
+        // how to know what bank if there is no info in request?
+        currencyData.setDate(date);
+        currencyData.setFormat(format);
+
         return new CurrencyData();
+    }
+
+    private Pair<String, Double> getBestRate(LocalDate date, String currency){
+        currencyRateRepository.findByDayAndBankAndCurrencyName(Bank.MTB, currency, date);
+        // TODO: convert into pair
+        return null;
     }
 
 }

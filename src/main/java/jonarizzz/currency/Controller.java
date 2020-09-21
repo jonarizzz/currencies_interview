@@ -33,7 +33,7 @@ public class Controller {
     public CurrencyData getRate(@RequestParam LocalDate date,
                                 @RequestParam(required = false, value = "JSON") Format format,
                                 @RequestParam(name = "currency") List<String> currencies,
-                                @RequestParam(name = "exchange") List<String> exchanges){
+                                @RequestParam(name = "exchange") List<String> exchanges) throws ParserConfigurationException, SAXException, IOException {
         return currencyService.getRate(date, format, currencies, exchanges);
     }
 
